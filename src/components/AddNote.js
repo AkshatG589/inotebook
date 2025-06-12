@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import NoteContext from "../context/notes/NoteContext";
 import "./Mobile.css"
 const AddNote = () => {
+  const navigate = useNavigate();
   const context = useContext(NoteContext);
   const { addNote } = context;
 
@@ -13,6 +15,7 @@ const AddNote = () => {
     e.preventDefault();
     if(localStorage.getItem("token") == null){
       alert("please login to add note")
+      navigate("/login");
       return
     }
     const finalTags = tags.join(", "); // space after comma for readability

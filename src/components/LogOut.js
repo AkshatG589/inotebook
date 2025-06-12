@@ -10,7 +10,7 @@ export default function LogOut() {
     window.location.reload();  //not recommended
   };
   return (
-    <button onClick={handleLogout} className="btn btn-outline-danger">
+    <button onClick={handleLogout} className="btn btn-outline-danger w-100">
       Logout
     </button>
   );

@@ -1,6 +1,6 @@
 import React from "react";
 import '../login.css';
-import LogOut from "./LogOut"
+import User from "./User"
 import { Link,  useLocation } from "react-router-dom";
 
 export default function NavBar() {
@@ -31,7 +31,10 @@ export default function NavBar() {
             </li>
           </ul>
           {/* login signup buttons*/}
-          {localStorage.getItem("token") !== null ? <LogOut />
+          {localStorage.getItem("token") !== null ?
+          <div>
+            <User /> 
+          </div>    
                :
           <div className="btn-group">
             <Link

@@ -25,9 +25,9 @@ const NoteState = (props) => {
       console.error("Error fetching notes:", error);
     }
   };
-
   useEffect(() => {
     getNotes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ✅ Add Note
