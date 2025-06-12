@@ -1,0 +1,26 @@
+.login-btn {
+  background: linear-gradient(135deg, #4e54c8, #8f94fb);
+  border: none;
+  color: white;
+  transition: all 0.3s ease-in-out;
+}
+
+.login-btn:hover {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  box-shadow: 0 4px 15px rgba(118, 75, 162, 0.4);
+  transform: translateY(-2px);
+}
+
+.signup-btn {
+  background: white;
+  color: #4e54c8;
+  border: 2px solid #4e54c8;
+  transition: all 0.3s ease-in-out;
+}
+
+.signup-btn:hover {
+  background: #4e54c8;
+  color: white;
+  box-shadow: 0 4px 15px rgba(78, 84, 200, 0.3);
+  transform: translateY(-2px);
+}

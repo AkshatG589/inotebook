@@ -1,0 +1,5 @@
+@media screen and (max-width: 390px){
+    .w-sm-50 {
+      width: 50% !important;
+    }
+  }
