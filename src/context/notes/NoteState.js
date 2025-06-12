@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import NoteContext from "./NoteContext";
 
 const NoteState = (props) => {
-  const host = "http://localhost:5000";
+  const host = "https://inotebook-v6zu.onrender.com";
   const [notes, setNotes] = useState([]);
 
   // 🔑 Get token from localStorage
