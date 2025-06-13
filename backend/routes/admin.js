@@ -4,7 +4,7 @@ const User = require("../models/User");
 const Note = require("../models/Note");
 
 // Replace with a more secure method (like env variable)
-const ADMIN_SECRET = "admin@123";
+const ADMIN_SECRET = "kdkenwldkdnw1l39ruen2odufbei";
 router.get("/data", async (req, res) => {
   try {
     const secret = req.header("x-admin-secret");
