@@ -48,7 +48,7 @@ export default function About() {
           </a>
 
           <a
-            href="https://github.com/akshatgupta"
+            href="https://github.com/AkshatG589/inotebook"
             target="_blank"
             rel="noopener noreferrer"
             className="btn btn-outline-dark d-flex align-items-center gap-2"
