@@ -6,25 +6,35 @@ const NoteState = (props) => {
   const [notes, setNotes] = useState([]);
 
   // 🔑 Get token from localStorage
-  const getToken = (token) => localStorage.getItem("token");
+  const getToken = () => localStorage.getItem("token");
 
   // ✅ Fetch all notes
   const getNotes = async () => {
-    try {
-      const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'auth-token': getToken(),
-        },
-      });
+  try {
+    const response = await fetch(`${host}/api/notes/fetchallnotes`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': getToken(),
+      },
+    });
 
-      const json = await response.json();
+    const json = await response.json();
+    console.log("Fetched notes:", json); // For debugging
+
+    // ✅ Safely handle response
+    if (Array.isArray(json)) {
       setNotes(json);
-    } catch (error) {
-      console.error("Error fetching notes:", error);
+    } else if (Array.isArray(json.notes)) {
+      setNotes(json.notes);
+    } else {
+      console.error("Invalid notes format from backend:", json);
+      setNotes([]); // fallback to empty array
     }
-  };
+  } catch (error) {
+    console.error("Error fetching notes:", error);
+  }
+};
   useEffect(() => {
     getNotes();
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,29 +1,42 @@
 import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import NoteContext from "../context/notes/NoteContext";
-import "./Mobile.css"
+import Alert from "./Alert";
+import "./Mobile.css";
+
 const AddNote = () => {
   const navigate = useNavigate();
-  const context = useContext(NoteContext);
-  const { addNote } = context;
+  const { addNote, getToken } = useContext(NoteContext);
 
   const [note, setNote] = useState({ title: "", description: "" });
   const [tagInput, setTagInput] = useState("");
   const [tags, setTags] = useState([]);
+  const [alert, setAlert] = useState(null);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if(localStorage.getItem("token") == null){
-      alert("please login to add note")
-      navigate("/login");
-      return
+
+    const token = getToken();
+    if (!token) {
+      setAlert({ type: "warning", message: "Please login to add a note." });
+      setTimeout(() => navigate("/login"), 1500);
+      return;
     }
+
     const finalTags = tags.join(", "); // space after comma for readability
-    addNote(note.title, note.description, finalTags);
-    // Reset fields
-    setNote({ title: "", description: "" });
-    setTagInput("");
-    setTags([]);
+
+    try {
+      addNote(note.title, note.description, finalTags);
+      setAlert({ type: "success", message: "Note added successfully!" });
+
+      // Reset fields
+      setNote({ title: "", description: "" });
+      setTagInput("");
+      setTags([]);
+    } catch (error) {
+      console.error("Add note failed:", error);
+      setAlert({ type: "danger", message: "Failed to add note. Try again." });
+    }
   };
 
   const onChange = (e) => {
@@ -31,10 +44,14 @@ const AddNote = () => {
   };
 
   const handleAddTag = () => {
-    const rawTags = tagInput.split(",").map(tag => tag.trim()).filter(tag => tag.length > 0);
-    const uniqueNewTags = rawTags.filter(tag => !tags.includes(tag));
+    const rawTags = tagInput
+      .split(",")
+      .map((tag) => tag.trim())
+      .filter((tag) => tag.length > 0);
+
+    const uniqueNewTags = rawTags.filter((tag) => !tags.includes(tag));
     if (uniqueNewTags.length > 0) {
-      setTags(prevTags => [...prevTags, ...uniqueNewTags]);
+      setTags((prevTags) => [...prevTags, ...uniqueNewTags]);
     }
     setTagInput("");
   };
@@ -45,6 +62,9 @@ const AddNote = () => {
 
   return (
     <div className="container bg-light my-3 border p-3 rounded">
+      {/* 🔔 Alert Display */}
+      {alert && <Alert type={alert.type} message={alert.message} />}
+
       <h1 className="text-center">Add Note</h1>
       <form onSubmit={handleSubmit}>
         {/* Title */}

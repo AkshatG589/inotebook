@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Loading from "./Loading";      // ✅ Your loader
-import Alert from "./Alert";          // ✅ Your alert component
+import Loading from "./Loading";
+import Alert from "./Alert";
+import NoteContext from "../context/notes/NoteContext"; // ✅ Your context path
 
 const LogIn = () => {
+  const context = useContext(NoteContext);
+  const { getToken } = context; // ✅ using context
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [alert, setAlert] = useState(null); // ✅ Alert message state
+  const [alert, setAlert] = useState(null);
 
   const navigate = useNavigate();
 
@@ -30,18 +34,22 @@ const LogIn = () => {
       const json = await response.json();
 
       if (json.success || json.authToken) {
+        // ✅ Store token using localStorage
         localStorage.setItem("token", json.authToken);
 
-        // ✅ Show success alert
-        setAlert({ type: "success", message: "Login successful!" });
+        // ✅ Optionally validate with getToken() (example usage)
+        const token = getToken();
+        if (token) {
+          setAlert({ type: "success", message: "Login successful!" });
 
-        // Redirect after short delay
-        setTimeout(() => {
-          navigate("/");
-          window.location.reload(); // optional
-        }, 1000);
+          // ✅ Redirect to home without page reload
+          setTimeout(() => {
+            navigate("/");
+          }, 1000);
+        } else {
+          setAlert({ type: "danger", message: "Failed to store token" });
+        }
       } else {
-        // ❌ Show error alert
         setAlert({ type: "danger", message: "Invalid credentials" });
       }
     } catch (error) {
@@ -52,7 +60,6 @@ const LogIn = () => {
     }
   };
 
-  // Show loading screen
   if (isLoading) return <Loading />;
 
   return (

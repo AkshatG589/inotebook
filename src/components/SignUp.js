@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Loading from "./Loading";   // ✅ Loader
-import Alert from "./Alert";       // ✅ Alert
+import Loading from "./Loading";
+import Alert from "./Alert";
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -13,17 +13,25 @@ const SignUp = () => {
 
   const [showWarning, setShowWarning] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [alert, setAlert] = useState(null); // ✅ Alert state
-
+  const [alert, setAlert] = useState(null);
   const navigate = useNavigate();
 
+  // Show warning if passwords mismatch
   useEffect(() => {
     setShowWarning(
       formData.password &&
-        formData.confirmPassword &&
-        formData.password !== formData.confirmPassword
+      formData.confirmPassword &&
+      formData.password !== formData.confirmPassword
     );
   }, [formData.password, formData.confirmPassword]);
+
+  // Auto-dismiss alert after 3 seconds
+  useEffect(() => {
+    if (alert) {
+      const timer = setTimeout(() => setAlert(null), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [alert]);
 
   const onChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
@@ -60,30 +68,32 @@ const SignUp = () => {
         localStorage.setItem("token", json.authToken);
         setAlert({ type: "success", message: "Signup successful!" });
 
-        // Redirect after short delay
+        // Redirect after showing alert
         setTimeout(() => {
           navigate("/");
-          window.location.reload(); // optional
-        }, 1000);
+        }, 1500);
       } else {
-        setAlert({ type: "danger", message: "Signup failed. Try again." });
+        setAlert({
+          type: "danger",
+          message: json.error || "Signup failed. Try again.",
+        });
       }
     } catch (error) {
-      console.error("Signup failed:", error);
-      setAlert({ type: "danger", message: "Something went wrong during signup." });
+      console.error("Signup error:", error);
+      setAlert({
+        type: "danger",
+        message: "Something went wrong during signup.",
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  if (isLoading) {
-    return <Loading />;
-  }
+  if (isLoading) return <Loading />;
 
   return (
     <div className="container d-flex justify-content-center align-items-center vh-100">
       <div style={{ width: "100%", maxWidth: "400px" }}>
-        {/* 🔔 Custom Alert */}
         {alert && <Alert type={alert.type} message={alert.message} />}
 
         <div className="card p-4 shadow">
@@ -107,17 +117,8 @@ const SignUp = () => {
             </div>
 
             {showWarning && (
-              <div className="position-relative d-inline-block mt-2">
-                <div
-                  className="popover bs-popover-end show position-absolute top-0 start-100 translate-middle-y ms-2"
-                  role="tooltip"
-                  style={{ width: "280px" }}
-                >
-                  <h3 className="popover-header bg-warning">Warning!</h3>
-                  <div className="popover-body">
-                    Password and Confirm Password must be the same.
-                  </div>
-                </div>
+              <div className="alert alert-warning mt-2">
+                Password and Confirm Password must be the same.
               </div>
             )}
 
