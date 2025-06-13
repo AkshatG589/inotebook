@@ -6,6 +6,8 @@ import NavBar from "./components/NavBar"
 import SignUp from "./components/SignUp"
 import LogIn from "./components/LogIn"
 import User from "./components/User"
+import Admin from "./components/Admin"
+
 import { BrowserRouter , Routes ,Route} from "react-router-dom"
 import NoteState from "./context/notes/NoteState"
 function App() {
@@ -19,7 +21,8 @@ function App() {
             <Route exact path="/about" element={<About />} />
             <Route exact path="/signup" element={<SignUp />} />
             <Route exact path="/login" element={<LogIn />} />
-            <Route exact path="/user" element={<User />} />         
+            <Route exact path="/user" element={<User />} />   
+            <Route exact path="/admin" element={<Admin />} />
           </Routes>
         </div>
       </BrowserRouter>
